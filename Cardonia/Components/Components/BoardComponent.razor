@@ -1,0 +1,28 @@
+﻿@using Cardonia.Model;
+
+@implements IRerenderable;
+
+<div class="parent">
+    <CardComponent Card="PlayerTable.GetAtPos(1)" />
+    <CardComponent Card="PlayerTable.GetAtPos(2)" />
+    <CardComponent Card="PlayerTable.GetAtPos(3)" />
+</div>
+
+<style>
+    .parent {
+        border: 1px solid black;
+        margin: 1rem;
+        padding: 2rem 2rem;
+        text-align: center;
+    }
+</style>
+
+@code {
+    [Parameter]
+    public PlayerTable PlayerTable { get; set; }
+
+    public void Rerender()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+}

@@ -1,0 +1,31 @@
+﻿@using Cardonia.Model;
+
+<div class="a">
+    @if (Card is not null)
+    {
+        <p>@Card.Name</p>
+
+        <p>@Card.Attack - @Card.Health</p>
+    }
+    else
+    {
+        <p>Free spot</p>
+    }
+</div>
+
+
+<style>
+    .a {
+        outline: 1px solid black;
+        width: 10%;
+        display: inline-block;
+        border: 1px solid red;
+        padding: 1rem 1rem;
+        vertical-align: middle;
+    }
+</style>
+
+@code {
+    [Parameter]
+    public Model.Card? Card { get; set; }
+}

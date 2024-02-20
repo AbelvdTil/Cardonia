@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34607.119
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cardonia", "Cardonia\Cardonia.csproj", "{CDBE76D0-3D73-41B2-A976-F3F2B2C3E6A8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CDBE76D0-3D73-41B2-A976-F3F2B2C3E6A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDBE76D0-3D73-41B2-A976-F3F2B2C3E6A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDBE76D0-3D73-41B2-A976-F3F2B2C3E6A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDBE76D0-3D73-41B2-A976-F3F2B2C3E6A8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {81FEC192-2021-4878-9D8C-CC3C9B9A365E}
+	EndGlobalSection
+EndGlobal
