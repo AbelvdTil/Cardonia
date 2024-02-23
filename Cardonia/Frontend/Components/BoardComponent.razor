@@ -1,4 +1,7 @@
 ﻿@using Cardonia.Model;
+@using Cardonia.Model.Cards;
+@using Cardonia.Frontend.Components;
+@using Cardonia.Model.Table
 
 @implements IRerenderable;
 
@@ -19,7 +22,8 @@
 
 @code {
     [Parameter]
-    public PlayerTable PlayerTable { get; set; }
+    [EditorRequired]
+    public required PlayerTable PlayerTable { get; set; }
 
     public void Rerender()
     {

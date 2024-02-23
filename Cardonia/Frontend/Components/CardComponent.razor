@@ -1,4 +1,5 @@
 ﻿@using Cardonia.Model;
+@using Cardonia.Model.Cards;
 
 <div class="a">
     @if (Card is not null)
@@ -27,5 +28,5 @@
 
 @code {
     [Parameter]
-    public Model.Card? Card { get; set; }
+    public Card? Card { get; set; }
 }

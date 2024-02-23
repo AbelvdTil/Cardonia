@@ -1,4 +1,6 @@
-﻿namespace Cardonia.Model
+﻿using Cardonia.Model.Table;
+
+namespace Cardonia.Model
 {
     public sealed class State
     {

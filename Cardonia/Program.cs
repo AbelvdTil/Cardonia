@@ -1,4 +1,4 @@
-using Cardonia.Components;
+using Cardonia.Frontend;
 
 var builder = WebApplication.CreateBuilder(args);
 
