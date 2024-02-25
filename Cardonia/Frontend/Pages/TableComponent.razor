@@ -1,5 +1,6 @@
 ﻿@page "/table";
 
+@using Cardonia.Frontend.Components
 @using Cardonia.Model
 @using Cardonia.Model.Enums
 @using Cardonia.Model.Table
@@ -9,63 +10,122 @@
 
 <h3>Cardonia</h3>
 
-@if (OpponentTable is not null)
+@if (table.FullTable && opponentInfo is not null)
 {
-    <p>Opponent: @table.PlayerName</p>
-    <p>Cards in hand: @OpponentTable.HandSize </p>
-    <p>Cards in deck: @OpponentTable.DeckSize</p>
+    if (!MyTurn)
+    {
+        <p>Enemies turn</p>
+    }
+    else
+    {
+        <p>Your turn</p>
+    }
 
-    <BoardComponent PlayerTable="OpponentTable" @ref="OppositeTableComponent" />
+    <p>Opponent: @opponentInfo.Name</p>
+    <p>Cards in hand: @opponentInfo.HandSize;</p>
+    <p>Cards in deck: @opponentInfo.DeckSize</p>
+
+    <BoardComponent PlayerTable="@opponentInfo.Board" Name="Opponent" @ref="enemyBoard"/>
+
+    <p>------</p>
+
+    <BoardComponent PlayerTable="table.Board(color)" Name="Yours" @ref="yourBoard" />
+
+    <p>Cards in deck: @table.Deck(color)</p>
+    <p>Cards in hand: @table.Hand(color).Count</p>
+    <p>Mana: @table.Mana(color).current / @table.Mana(color).max</p>
+    <p>You: @Name</p>
+
+    
+
+    if (MyTurn)
+    {
+        <button class="btn btn-primary" @onclick="() => table.NextTurn(color)">End Turn</button>
+        <button class="btn btn-primary" @onclick="() => table.PlayCard(color, table.Hand(color).FirstOrDefault(), table.Hand(color).Skip(1).FirstOrDefault(), yourBoard.Selected)">Play Card</button>
+        <button class="btn btn-primary" @onclick="AttackCard">Attack enemy</button>
+        <button class="btn btn-primary" @onclick="UseCard">Use card</button>
+    }
+}
+else if (joined)
+{
+    <p>Welcome @Name!</p>
 }
 else
 {
-    <p>No oponent joined the table.</p>
-}
-
------
-
-@if (OwnTable is not null)
-{
-    <BoardComponent PlayerTable="OwnTable" @ref="OwnTableComponent" />
-
-    <p>Cards in deck: @OwnTable.DeckSize</p>
-    <p>Cards in hand: @OwnTable.HandSize </p>
-    <p>You: @OwnTable.PlayerName</p>
-
-    <button class="btn btn-primary" @onclick="OwnTable.DrawCard">Draw Card</button>
-    <input @bind-value="pos" />
-    <button class="btn btn-primary" @onclick="() => OwnTable.PlayCard(new Card(), pos)">Play Card</button>
-}
-else
-{
-    <p>You did not join table.</p>
-
-    <input @bind-value="Name" />
-
+    <p>Click join to join!</p>
+    <input type="text" @bind-value="Name" />
     <button class="btn btn-primary" @onclick="JoinTable">Join</button>
 }
+<button class="btn btn-primary" @onclick="OnUpdate">Render</button>
+<p><button class="btn btn-primary" @onclick="Reset">Reset</button></p>
 
-<button class="btn btn-primary" @onclick="StateHasChanged">Render</button>
-<button class="btn btn-primary" @onclick="() =>TableManager.Leave(Name)">Leave</button>
 
 @code {
     private string Name { get; set; } = "";
 
-    private int pos { get; set; }
-
     private Table table { get; set; } = default!;
 
-    private PlayerColor? color { get; set; }
+    private BoardComponent enemyBoard { get; set; }
+
+    private BoardComponent yourBoard { get; set; }
+
+    private bool MyTurn => table.ActivePlayer == color;
+
+    private PlayerColor color { get; set; }
+
+    private OpponentInfo? opponentInfo { get; set; } = default!;
+
+    private bool joined { get; set; } = false;
 
     protected override void OnInitialized()
     {
         table = State.Instance.TableManager.Table;
 
-        table.UpdateEvent += async () => await InvokeAsync(() => StateHasChanged());
+        table.UpdateEvent += async () => await InvokeAsync(() => OnUpdate());
+    }
+
+    protected Task OnUpdate()
+    {
+        OpponentInfo? info = table.GetOpponentInfo(color);
+
+        if (info is not null)
+        {
+            opponentInfo = info;
+        }
+
+        StateHasChanged();
+
+        return Task.CompletedTask;
     }
 
     protected void JoinTable()
     {
-        color = table.JoinTable(Name);
+        PlayerColor? c = table.JoinTable(Name);
+
+        if (c is not null)
+        {
+            color = c.Value;
+            joined = true;
+        }
+        else
+        {
+            Name = "Invalid";
+        }
     }
+
+    protected void Reset()
+    {
+        State.Instance.TableManager.Table = new Table();
+    }
+
+    protected void AttackCard()
+    {
+        table.AttackCard(color, yourBoard.Selected, enemyBoard.Selected);
+    }
+
+    protected void UseCard()
+    {
+        table.UseCard(color, yourBoard.Selected);
+    }
+
 }

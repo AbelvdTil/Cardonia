@@ -1,26 +1,53 @@
 ﻿@using Cardonia.Model;
 @using Cardonia.Model.Cards;
 
-<div class="a">
-    @if (Card is not null)
-    {
+
+@if (Card is not null && !Card.IsUsed)
+{
+    <div class="active">
         <p>@Card.Name</p>
 
         <p>@Card.Attack - @Card.Health</p>
-    }
-    else
-    {
+    </div>
+}
+else if (Card is not null && Card.IsUsed)
+{
+    <div class="inactive">
+        <p>@Card.Name</p>
+
+        <p>@Card.Attack - @Card.Health</p>
+    </div>
+}
+else
+{
+    <div class="free_space">
         <p>Free spot</p>
-    }
-</div>
+    </div>
+}
 
 
 <style>
-    .a {
+    .inactive {
         outline: 1px solid black;
         width: 10%;
         display: inline-block;
         border: 1px solid red;
+        padding: 1rem 1rem;
+        vertical-align: middle;
+    }
+    .active {
+        outline: 1px solid black;
+        width: 10%;
+        display: inline-block;
+        border: 1px solid green;
+        padding: 1rem 1rem;
+        vertical-align: middle;
+    }
+    .free_space {
+        outline: 1px solid black;
+        width: 10%;
+        display: inline-block;
+        border: 1px dotted grey;
         padding: 1rem 1rem;
         vertical-align: middle;
     }

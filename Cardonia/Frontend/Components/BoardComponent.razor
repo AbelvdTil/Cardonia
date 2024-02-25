@@ -3,12 +3,19 @@
 @using Cardonia.Frontend.Components;
 @using Cardonia.Model.Table
 
-@implements IRerenderable;
+@namespace Cardonia.Frontend.Components
 
 <div class="parent">
-    <CardComponent Card="PlayerTable.GetAtPos(1)" />
-    <CardComponent Card="PlayerTable.GetAtPos(2)" />
-    <CardComponent Card="PlayerTable.GetAtPos(3)" />
+
+    <InputRadioGroup @bind-Value="Selected" Name="@Name" @bind-Value:after="test">
+    @for (int i = 0; i < 5; i++)
+    {
+            <InputRadio Value="i" />
+        
+        <CardComponent Card="At(i)" />
+    }
+    </InputRadioGroup>
+    
 </div>
 
 <style>
@@ -23,10 +30,23 @@
 @code {
     [Parameter]
     [EditorRequired]
-    public required PlayerTable PlayerTable { get; set; }
+    public required IEnumerable<(int pos, Card card)> PlayerTable { get; set; }
 
-    public void Rerender()
+    [Parameter]
+    public string Name { get; set; } = "";
+
+    [Parameter]
+    public EventCallback<int> SelectedCard { get; set; }
+
+    public int Selected { get; set; }
+
+    private Card? At(int pos)
     {
-        InvokeAsync(StateHasChanged);
+        return PlayerTable.Where(b => b.pos == pos).Select(b => b.card).FirstOrDefault();
+    }
+
+    private void test()
+    {
+        SelectedCard.InvokeAsync(Selected);
     }
 }

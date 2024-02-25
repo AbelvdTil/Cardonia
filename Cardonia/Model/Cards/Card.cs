@@ -1,5 +1,4 @@
 ﻿using Cardonia.Model.Enums;
-using Cardonia.Model.Table;
 
 namespace Cardonia.Model.Cards;
 
@@ -9,22 +8,41 @@ public class Card
 
     public string Name { get; set; } = "";
 
+    public int Cost { get; set; } = 2;
+
     public int Attack { get; set; }
 
     public int Health { get; set; }
 
-    public PlayerTable? Table { get; set; }
+    public bool IsUsed { get; set; } = true;
 
-    public Card()
+    public Table.Table Table { get; set; } = default!;
+
+    public PlayerColor Owner { get; set; } = default!;
+
+    public void AttackCard(Card? recipient)
     {
-        Name = "Gunther";
-        Attack = 3;
-        Health = 2;
+        if (recipient == null) return;
+
+        if (IsUsed) return;
+
+        OnAttacking();
+
+        recipient.TakeDamage(Attack, DamageType.MELEE);
+
+        TakeDamage(recipient.Attack, DamageType.MELEE);
+
+        IsUsed = true;
     }
 
-    public void AttackCard(Card recipient)
+    public void OnUse()
     {
-        recipient.TakeDamage(Attack, DamageType.MELEE);
+        if (IsUsed) return;
+
+        Health += 2;
+        Attack += 1;
+
+        IsUsed = true;
     }
 
     public void TakeDamage(int amount, DamageType type)
@@ -35,23 +53,18 @@ public class Card
 
         if (Health == 0)
         {
-            Table.RemoveCard(this);
+            Table.RemoveCard(Owner, this);
         }
     }
 
-    public void WhenPlayed()
+    public void OnPlayed()
     {
-
+        Table.DrawCard(Owner);
     }
 
-    public void WhenActivated()
+    private void OnAttacking()
     {
-
-    }
-
-    public void WhenAttacking()
-    {
-
+        Table.DrawCard(Owner);
     }
 
 
